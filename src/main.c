@@ -1,8 +1,8 @@
 # include <stdio.h>
 # include <stdlib.h>
 
-# include "diskops.h"
-# include "password.h"
+# include "../include/diskops/diskops.h"
+# include "../include/password/password.h"
 
 int main(){
 
