@@ -11,11 +11,10 @@ void create_entry(void);
 void modif_entry_value(void);
 void modif_entry_content(void);
 
-int main() {
-  create_entry();
-  modif_entry_value();
+int main() { 
   return 0;
 }
+//Fonction de creation
 void create_entry(void){
 
   printf("Please write your entry name:");
@@ -43,7 +42,7 @@ void create_entry(void){
 
   printf("Your entry has been registered with the following content :\n %s", entry_content);
 }
-
+//Fonction de modif
 void modif_entry_value(void) {
   char new_entry_value[100];
   printf("Modification of entry : '%s'\n", entry_value); 
@@ -65,8 +64,28 @@ void modif_entry_value(void) {
   strcpy(entry_value, new_entry_value);
   printf("Entry modification sucessfull  : '%s'\n", new_entry_value);
 }
+//Fonction de modif (de content)
 void modif_entry_content(void){
-  printf("Please write down the entry value of the content you wish to modify:\n");
+  printf("Please write down the entry value of the content you wish to modify :\n");
+  fgets(new_entry_value, sizeof(new_entry_value), stdin);
+  new_entry_value[strcspn(new_entry_value, "\n")] = '\0';
+
+  char old_file_content[2056];
+  char new_entry_content[2056];
+
+  printf("Please write the content :\n");
   fgets(new_entry_content, sizeof(new_entry_content), stdin);
-  printf(" L'entree %s a ete  modifiee avec succes ayant comme contenu :\n %s", entry_value, entry_content);
+  new_entry_content[strcspn(new_entry_content, "\n")] = '\0';
+
+  FILE *fichier = fopen(entry_value, "w");
+  if (fichier == NULL){
+    perror("Error while modifying the file");
+    return;
+  }
+  fprintf(fichier, "%s\n", new_entry_content);
+  fclose(fichier);
+
+
+  printf(" L'entree %s a ete  modifiee avec succes ayant comme contenu :\n %s", entry_value, new_entry_content);
 }
+// :3
