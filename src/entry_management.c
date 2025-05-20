@@ -8,16 +8,17 @@ char new_entry_content[2056];
 
 // Prototypes de fonction
 void create_entry(void);
-void modif_entry_value(char *entry_value);
-void modif_entry_content(char *entry_value);
+void modif_entry_value(void);
+void modif_entry_content(void);
 
 int main() {
   create_entry();
+  modif_entry_value();
   return 0;
 }
 void create_entry(void){
 
-  printf("Veuillez nommer votre entree :\n");
+  printf("Please write your entry name:");
   fgets(entry_value, sizeof(entry_value), stdin);
   entry_value[strcspn(entry_value, "\n")] ='\0';
 
@@ -26,34 +27,46 @@ void create_entry(void){
 
   FILE *fichier = fopen(filename, "w");
   if (fichier == NULL){
-    perror("Error lors de creation du fichier");
+    perror("Error while creating the file");
     return;
   }
 
   int c;
   while ((c=getchar())!= '\n' && c != EOF);
 
-  printf("Veuillez entrer le contenu de %s : \n", entry_value);
+  printf("Please write the content of %s : \n", entry_value);
   fgets(entry_content, sizeof(entry_content), stdin);
 
 
   fprintf(fichier, "%s\n", entry_content);
   fclose(fichier);
 
-  printf("Votre entree a bien ete enrefistree avec comme contenu :\n %s", entry_content);
+  printf("Your entry has been registered with the following content :\n %s", entry_content);
 }
 
-void modif_entry_value(char *entry_value) {
-  printf("Modification de l'entrée '%s'\n", entry_value);
+void modif_entry_value(void) {
+  char new_entry_value[100];
+  printf("Modification of entry : '%s'\n", entry_value); 
 
-  printf("Veuillez entrer la nouvelle valeur :\n");
+  printf("Please enter a new value :\n");
   fgets(new_entry_value, sizeof(new_entry_value), stdin);
   new_entry_value[strcspn(new_entry_value, "\n")] = '\0';
 
-  printf("Valeur modifiée avec succès : '%s'\n", new_entry_value);
+  char old_filename[100];
+  char new_filename[100];
+  snprintf(old_filename, sizeof(old_filename), "%s.vault", entry_value);
+  snprintf(new_filename, sizeof(new_entry_value), "%s.vault", new_entry_value);
+
+  if (rename(old_filename, new_filename) != 0) {
+    perror("Failed to rename file");
+    return;
+  }
+
+  strcpy(entry_value, new_entry_value);
+  printf("Entry modification sucessfull  : '%s'\n", new_entry_value);
 }
-void modif_entry_content(char *entry_value){
-  printf("Veuillez entrer le nom de l'entree dont vous souhaitez modifier le contenu :\n");
+void modif_entry_content(void){
+  printf("Please write down the entry value of the content you wish to modify:\n");
   fgets(new_entry_content, sizeof(new_entry_content), stdin);
   printf(" L'entree %s a ete  modifiee avec succes ayant comme contenu :\n %s", entry_value, entry_content);
 }
