@@ -3,10 +3,9 @@
 # include <string.h>
 # include <stdbool.h>
 
+bool compare_masterpass(const char *password) {
 
-bool check_password(const char *password) {
-
-    char master_password[250];
+    char masterpass[251];
 
     FILE *file = fopen("masterpassword", "r");
     if (file == NULL) {
@@ -15,8 +14,8 @@ bool check_password(const char *password) {
         exit(1);
     }
 
-    fgets(master_password, sizeof(master_password), file);
+    fgets(masterpass, sizeof(masterpass), file);
     fclose(file);
 
-    return strcmp(password, master_password) == 0;
+    return strcmp(password, masterpass) == 0;
 }

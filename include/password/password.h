@@ -6,6 +6,6 @@
 # include <string.h>
 # include <stdbool.h>
 
-bool check_password(char *password);
+bool compare_masterpass(char *password);
 
 # endif // PASSWORD_H
