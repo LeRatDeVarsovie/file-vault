@@ -6,18 +6,13 @@
 
 int main(){
 
-    char *password;
+    char password[251];
 
     if (!(file_exists("masterpassword"))) {
 
         printf("No password detected, please create a master password (250 Characters Maximum):\n");
-        scanf("%s", password);
-
-        if (sizeof(password) > 250) {
-
-            printf("Password too long!\n");
-            exit(1);
-        }
+        fgets(password, sizeof(password), stdin);
+        password[strcspn(password, "\n")] = 0;
 
         // TODO: Hash `password` using a hashing function.
 
