@@ -6,7 +6,6 @@
 # include <string.h>
 # include <stdbool.h>
 
-void create_master_password(char *password);
 bool check_password(char *password);
 
 # endif // PASSWORD_H

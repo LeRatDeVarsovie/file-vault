@@ -3,19 +3,6 @@
 # include <string.h>
 # include <stdbool.h>
 
-void create_master_password(const char *password) {
-
-    FILE *file = fopen("masterpassword", "w");
-    if (file == NULL) {
-
-        printf("Failed creating file.\n");
-        exit(1);
-    }
-
-    fprintf(file, "%s", password);
-
-    fclose(file);
-}
 
 bool check_password(const char *password) {
 
