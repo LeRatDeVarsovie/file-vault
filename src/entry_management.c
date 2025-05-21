@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 
 char entry_value[100];
 char entry_content[2056];
@@ -10,8 +11,11 @@ char new_entry_content[2056];
 void create_entry(void);
 void modif_entry_value(void);
 void modif_entry_content(void);
+void delete_entry(void);
 
-int main() { 
+int main() {
+    create_entry();
+    delete_entry();
   return 0;
 }
 //Fonction de creation
@@ -45,7 +49,7 @@ void create_entry(void){
 //Fonction de modif
 void modif_entry_value(void) {
   char new_entry_value[100];
-  printf("Modification of entry : '%s'\n", entry_value); 
+  printf("Modification of entry : '%s'\n", entry_value);
 
   printf("Please enter a new value :\n");
   fgets(new_entry_value, sizeof(new_entry_value), stdin);
@@ -83,9 +87,23 @@ void modif_entry_content(void){
     return;
   }
   fprintf(fichier, "%s\n", new_entry_content);
-  fclose(fichier);
-
-
   printf(" L'entree %s a ete  modifiee avec succes ayant comme contenu :\n %s", entry_value, new_entry_content);
+}
+//Fonction de suppression (pour l'instant faut tapper le nom de l'entrée.vault)
+void delete_entry(void){
+    char entry_value[100];
+
+    printf("Please type the entry value you wish to delete :\n");
+    fgets(entry_value, sizeof(entry_value), stdin);
+    entry_value[strcspn(entry_value, "\n")] = '\0';
+
+    int error_handle = remove(entry_value);
+    if (error_handle != 0){
+        perror("Error while deleting the file");
+        return;
+    }  else{
+        printf("Entry deletion successful : '%s'\n", entry_value);
+    }
+
 }
 // :3
