@@ -21,7 +21,7 @@ int main(){
 
         // TODO: Hash `password` using a hashing function.
 
-        create_master_password(password);
+        file_from_text("masterpassword", password);
     } else {
 
         printf("Please enter your password:\n");
@@ -29,7 +29,7 @@ int main(){
 
         // TODO: Hash `password` using a hashing function.
 
-        if (!(check_password(password))) {
+        if (!(compare_masterpass(password))) {
 
             printf("Incorrect password!\n");
             exit(1);
