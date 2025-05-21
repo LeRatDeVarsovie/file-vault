@@ -1,7 +1,7 @@
-#ifndef HASH-LIB_H
-#define HASH-LIB_H
+#ifndef HASH_LIB_H
+#define HASH_LIB_H
 
 char* hash_function(char* password);
 void display_ascii_hash(char* hash);
 
-#endif
+#endif // HASH_LIB_H
