@@ -22,7 +22,7 @@ int main(){
             exit(1);
         }
 
-        password[strcspn(password, "\n")] = 0;
+        password[strcspn(password, "\n")] = '\0';
 
         // TODO: Hash `password` using a hashing function.
 
@@ -41,7 +41,7 @@ int main(){
             exit(1);
         }
 
-        password[strcspn(password, "\n")] = 0;
+        password[strcspn(password, "\n")] = '\0';
 
         // TODO: Hash `password` using a hashing function.
 
