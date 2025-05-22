@@ -1,25 +1,11 @@
 # include <stdio.h>
 # include <stdlib.h>
-# include <stdbool.h>
 # include <string.h>
+# include <stdbool.h>
 
-void create_master_password(const char *password) {
+bool compare_masterpass(const char *password) {
 
-    FILE *file = fopen("masterpassword", "w");
-    if (file == NULL) {
-
-        printf("Failed creating file.\n");
-        exit(1);
-    }
-
-    fprintf(file, "%s", password);
-
-    fclose(file);
-}
-
-bool check_password(const char *password) {
-
-    char master_password[250];
+    char masterpass[251];
 
     FILE *file = fopen("masterpassword", "r");
     if (file == NULL) {
@@ -28,8 +14,8 @@ bool check_password(const char *password) {
         exit(1);
     }
 
-    fgets(master_password, sizeof(master_password), file);
+    fgets(masterpass, sizeof(masterpass), file);
     fclose(file);
 
-    return strcmp(password, master_password) == 0;
+    return strcmp(password, masterpass) == 0;
 }
