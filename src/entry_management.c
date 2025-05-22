@@ -1,109 +1,180 @@
+
 #include <stdio.h>
 #include <string.h>
-#include <time.h>
+#include <stdlib.h>
 
-char entry_value[100];
-char entry_content[2056];
-char new_entry_value[100];
-char new_entry_content[2056];
-
-// Prototypes de fonction
-void create_entry(void);
-void modif_entry_value(void);
-void modif_entry_content(void);
-void delete_entry(void);
-
-int main() {
-    create_entry();
-    delete_entry();
-  return 0;
-}
-//Fonction de creation
+// Fonction de création
 void create_entry(void){
+  char entry_value[101];
+  char entry_content[2056];
+  char filename[128];
 
-  printf("Please write your entry name:");
-  fgets(entry_value, sizeof(entry_value), stdin);
-  entry_value[strcspn(entry_value, "\n")] ='\0';
+  printf("Please write your entry name (100 characters max): ");
+  if (fgets(entry_value, sizeof(entry_value), stdin) == NULL) {
+    fprintf(stderr, "Error reading input.\n");
+    exit(1);
+  }
 
-  char filename[100];
+  if (strchr(entry_value, '\n') == NULL) {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
+    printf("Your entry name exceeds the max length.\n");
+    exit(1);
+  }
+
+  entry_value[strcspn(entry_value, "\n")] = '\0';
+
   snprintf(filename, sizeof(filename), "%s.vault", entry_value);
 
   FILE *fichier = fopen(filename, "w");
   if (fichier == NULL){
     perror("Error while creating the file");
-    return;
+    exit(1);
   }
 
-  int c;
-  while ((c=getchar())!= '\n' && c != EOF);
+  printf("Please write the content of %s:\n", entry_value);
+  if (fgets(entry_content, sizeof(entry_content), stdin) == NULL) {
+    fprintf(stderr, "Error reading content.\n");
+    fclose(fichier);
+    exit(1);
+  }
 
-  printf("Please write the content of %s : \n", entry_value);
-  fgets(entry_content, sizeof(entry_content), stdin);
+  if (strchr(entry_content, '\n') == NULL) {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
+    printf("Your entry content exceeds the max length.\n");
+    fclose(fichier);
+    exit(1);
+  }
 
-
+  entry_content[strcspn(entry_content, "\n")] = '\0';
   fprintf(fichier, "%s\n", entry_content);
   fclose(fichier);
 
-  printf("Your entry has been registered with the following content :\n %s", entry_content);
+  printf("Your entry has been registered with the following content:\n%s\n", entry_content);
 }
-//Fonction de modif
-void modif_entry_value(void) {
-  char new_entry_value[100];
-  printf("Modification of entry : '%s'\n", entry_value);
 
-  printf("Please enter a new value :\n");
-  fgets(new_entry_value, sizeof(new_entry_value), stdin);
+// Fonction de modification du nom
+void modif_entry_value(void) {
+  char entry_value[101];
+  char new_entry_value[101];
+  char old_filename[128];
+  char new_filename[128];
+
+  printf("Please enter the name of the entry to modify:\n");
+  if (fgets(entry_value, sizeof(entry_value), stdin) == NULL) {
+    fprintf(stderr, "Error reading input.\n");
+    exit(1);
+  }
+
+  if (strchr(entry_value, '\n') == NULL) {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
+    printf("Your entry name exceeds the max length.\n");
+    exit(1);
+  }
+
+  entry_value[strcspn(entry_value, "\n")] = '\0';
+
+  printf("Please enter the new entry name:\n");
+  if (fgets(new_entry_value, sizeof(new_entry_value), stdin) == NULL) {
+    fprintf(stderr, "Error reading input.\n");
+    exit(1);
+  }
+
+  if (strchr(new_entry_value, '\n') == NULL) {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
+    printf("New entry name exceeds the max length.\n");
+    exit(1);
+  }
+
   new_entry_value[strcspn(new_entry_value, "\n")] = '\0';
 
-  char old_filename[100];
-  char new_filename[100];
   snprintf(old_filename, sizeof(old_filename), "%s.vault", entry_value);
-  snprintf(new_filename, sizeof(new_entry_value), "%s.vault", new_entry_value);
+  snprintf(new_filename, sizeof(new_filename), "%s.vault", new_entry_value);
 
   if (rename(old_filename, new_filename) != 0) {
     perror("Failed to rename file");
-    return;
+    exit(1);
   }
 
-  strcpy(entry_value, new_entry_value);
-  printf("Entry modification sucessfull  : '%s'\n", new_entry_value);
+  printf("Entry renamed successfully: '%s'\n", new_entry_value);
 }
-//Fonction de modif (de content)
+
+// Modification du contenu d'une entrée
 void modif_entry_content(void){
-  printf("Please write down the entry value of the content you wish to modify :\n");
-  fgets(new_entry_value, sizeof(new_entry_value), stdin);
-  new_entry_value[strcspn(new_entry_value, "\n")] = '\0';
-
-  char old_file_content[2056];
+  char entry_value[101];
   char new_entry_content[2056];
+  char filename[128];
 
-  printf("Please write the content :\n");
-  fgets(new_entry_content, sizeof(new_entry_content), stdin);
+  printf("Please write down the entry title to modify:\n");
+  if (fgets(entry_value, sizeof(entry_value), stdin) == NULL) {
+    fprintf(stderr, "Error reading input.\n");
+    exit(1);
+  }
+
+  if (strchr(entry_value, '\n') == NULL) {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
+    printf("Your entry name exceeds the max length.\n");
+    exit(1);
+  }
+
+  entry_value[strcspn(entry_value, "\n")] = '\0';
+  snprintf(filename, sizeof(filename), "%s.vault", entry_value);
+
+  printf("Please write the new content:\n");
+  if (fgets(new_entry_content, sizeof(new_entry_content), stdin) == NULL) {
+    fprintf(stderr, "Error reading content.\n");
+    exit(1);
+  }
+
+  if (strchr(new_entry_content, '\n') == NULL) {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
+    printf("Content exceeds the max length.\n");
+    exit(1);
+  }
+
   new_entry_content[strcspn(new_entry_content, "\n")] = '\0';
 
-  FILE *fichier = fopen(entry_value, "w");
+  FILE *fichier = fopen(filename, "w");
   if (fichier == NULL){
     perror("Error while modifying the file");
-    return;
+    exit(1);
   }
+
   fprintf(fichier, "%s\n", new_entry_content);
-  printf(" L'entree %s a ete  modifiee avec succes ayant comme contenu :\n %s", entry_value, new_entry_content);
+  fclose(fichier);
+  printf("The entry '%s' has been successfully modified.\nNew content:\n%s\n", entry_value, new_entry_content);
 }
-//Fonction de suppression (pour l'instant faut tapper le nom de l'entrée.vault)
+
+// Suppression d'une entrée
 void delete_entry(void){
-    char entry_value[100];
+  char entry_value[101];
+  char filename[128];
 
-    printf("Please type the entry value you wish to delete :\n");
-    fgets(entry_value, sizeof(entry_value), stdin);
-    entry_value[strcspn(entry_value, "\n")] = '\0';
+  printf("Please type the entry name you wish to delete:\n");
+  if (fgets(entry_value, sizeof(entry_value), stdin) == NULL) {
+    fprintf(stderr, "Error reading input.\n");
+    exit(1);
+  }
 
-    int error_handle = remove(entry_value);
-    if (error_handle != 0){
-        perror("Error while deleting the file");
-        return;
-    }  else{
-        printf("Entry deletion successful : '%s'\n", entry_value);
-    }
+  if (strchr(entry_value, '\n') == NULL) {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
+    printf("Your entry name exceeds the max length.\n");
+    exit(1);
+  }
 
+  entry_value[strcspn(entry_value, "\n")] = '\0';
+  snprintf(filename, sizeof(filename), "%s.vault", entry_value);
+
+  if (remove(filename) != 0){
+    perror("Error while deleting the file");
+    exit(1);
+  }
+
+  printf("Entry deletion successful: '%s'\n", filename);
 }
-// :3
