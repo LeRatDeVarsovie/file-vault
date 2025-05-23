@@ -38,7 +38,7 @@ void create_entry(void) {
 
   printf("Please write the content of %s:\n", entry_value);
   if (fgets(entry_content, sizeof(entry_content), stdin) == NULL) {
-    fprintf(stderr, "Error reading content.\n");
+    perror("Error reading content.");
     exit(1);
   }
 
