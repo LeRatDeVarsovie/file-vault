@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-void create_entry(void){
+void create_entry(void) {
   char entry_value[102];
   char entry_content[2056];
   char filename[108];
@@ -12,19 +12,6 @@ void create_entry(void){
     perror("Error reading input.");
     exit(1);
   }
-
-for (int i = 0; entry_value[i] != '\0'; i++) {
-  char c = entry_value[i];
-  if (!((c >= 'a' && c <= 'z') ||
-        (c >= 'A' && c <= 'Z') ||
-        (c >= '0' && c <= '9') ||
-        c == '_' || c == '-')) {
-    printf("❌ Invalid character '%c' in entry name. Only letters, numbers, '-' and '_' are allowed.\n", c);
-    exit(1);
-  //a bit messy verification but allows the user to use accents
-  }
-}
-
   if (strchr(entry_value, '\n') == NULL) {
     int c;
     while ((c = getchar()) != '\n' && c != EOF);
@@ -34,9 +21,21 @@ for (int i = 0; entry_value[i] != '\0'; i++) {
 
   entry_value[strcspn(entry_value, "\n")] = '\0';
 
+  for (int i = 0; entry_value[i] != '\0'; i++) {
+    char c = entry_value[i];
+    if (!((c >= 'a' && c <= 'z') ||
+          (c >= 'A' && c <= 'Z') ||
+          (c >= '0' && c <= '9') ||
+          c == '_' || c == '-')) {
+      printf("❌ Invalid character '%c' in entry name. Only letters, numbers, '-' and '_' are allowed.\n", c);
+      exit(1);
+      // a bit messy verification but allows the user to use accents
+    }
+  }
+
+  
   snprintf(filename, sizeof(filename), "%s.vault", entry_value);
 
- 
   printf("Please write the content of %s:\n", entry_value);
   if (fgets(entry_content, sizeof(entry_content), stdin) == NULL) {
     fprintf(stderr, "Error reading content.\n");
@@ -50,13 +49,11 @@ for (int i = 0; entry_value[i] != '\0'; i++) {
     exit(1);
   }
 
-
-   FILE *file = fopen(filename, "w");
-  if (file == NULL){
+  FILE *file = fopen(filename, "w");
+  if (file == NULL) {
     perror("Error while creating the file");
     exit(1);
   }
-
 
   fprintf(file, "%s\n", entry_content);
   fclose(file);
@@ -76,26 +73,28 @@ void modif_entry_value(void) {
     exit(1);
   }
 
-  for (int i = 0; entry_value[i] != '\0'; i++) {
-  char c = entry_value[i];
-  if (!((c >= 'a' && c <= 'z') ||
-        (c >= 'A' && c <= 'Z') ||
-        (c >= '0' && c <= '9') ||
-        c == '_' || c == '-')) {
-    printf("❌ Invalid character '%c' in entry name. Only letters, numbers, '-' and '_' are allowed.\n", c);
-    exit(1);
-  //a bit messy verification but allows the user to use accents
-  }
-  }
-
   if (strchr(entry_value, '\n') == NULL) {
     int c;
     while ((c = getchar()) != '\n' && c != EOF);
     printf("Your entry name exceeds the max length.\n");
     exit(1);
   }
-  
+
   entry_value[strcspn(entry_value, "\n")] = '\0';
+
+  for (int i = 0; entry_value[i] != '\0'; i++) {
+    char c = entry_value[i];
+    if (!((c >= 'a' && c <= 'z') ||
+          (c >= 'A' && c <= 'Z') ||
+          (c >= '0' && c <= '9') ||
+          c == '_' || c == '-')) {
+      printf("❌ Invalid character '%c' in entry name. Only letters, numbers, '-' and '_' are allowed.\n", c);
+      exit(1);
+      // a bit messy verification but allows the user to use accents
+    }
+  }
+
+  
 
   printf("Please enter the new entry name:\n");
   if (fgets(new_entry_value, sizeof(new_entry_value), stdin) == NULL) {
@@ -123,7 +122,7 @@ void modif_entry_value(void) {
   printf("Entry renamed successfully: '%s'\n", new_entry_value);
 }
 
-void modif_entry_content(void){
+void modif_entry_content(void) {
   char entry_value[102];
   char new_entry_content[2056];
   char filename[108];
@@ -134,18 +133,6 @@ void modif_entry_content(void){
     exit(1);
   }
 
-for (int i = 0; entry_value[i] != '\0'; i++) {
-  char c = entry_value[i];
-  if (!((c >= 'a' && c <= 'z') ||
-        (c >= 'A' && c <= 'Z') ||
-        (c >= '0' && c <= '9') ||
-        c == '_' || c == '-')) {
-    printf("❌ Invalid character '%c' in entry name. Only letters, numbers, '-' and '_' are allowed.\n", c);
-    exit(1);
-  //a bit messy verification but allows the user to use accents
-  }
-  }
-
   if (strchr(entry_value, '\n') == NULL) {
     int c;
     while ((c = getchar()) != '\n' && c != EOF);
@@ -154,6 +141,20 @@ for (int i = 0; entry_value[i] != '\0'; i++) {
   }
 
   entry_value[strcspn(entry_value, "\n")] = '\0';
+
+  for (int i = 0; entry_value[i] != '\0'; i++) {
+    char c = entry_value[i];
+    if (!((c >= 'a' && c <= 'z') ||
+          (c >= 'A' && c <= 'Z') ||
+          (c >= '0' && c <= '9') ||
+          c == '_' || c == '-')) {
+      printf("❌ Invalid character '%c' in entry name. Only letters, numbers, '-' and '_' are allowed.\n", c);
+      exit(1);
+      // a bit messy verification but allows the user to use accents
+    }
+  }
+
+  
   snprintf(filename, sizeof(filename), "%s.vault", entry_value);
 
   printf("Please write the new content:\n");
@@ -169,9 +170,8 @@ for (int i = 0; entry_value[i] != '\0'; i++) {
     exit(1);
   }
 
-
   FILE *file = fopen(filename, "w");
-  if (file == NULL){
+  if (file == NULL) {
     perror("Error while modifying the file");
     exit(1);
   }
@@ -181,7 +181,7 @@ for (int i = 0; entry_value[i] != '\0'; i++) {
   printf("The entry '%s' has been successfully modified.\nNew content:\n%s\n", entry_value, new_entry_content);
 }
 
-void delete_entry(void){
+void delete_entry(void) {
   char entry_value[102];
   char filename[108];
 
@@ -191,19 +191,6 @@ void delete_entry(void){
     exit(1);
   }
 
-for (int i = 0; entry_value[i] != '\0'; i++) {
-  char c = entry_value[i];
-  if (!((c >= 'a' && c <= 'z') ||
-        (c >= 'A' && c <= 'Z') ||
-        (c >= '0' && c <= '9') ||
-        c == '_' || c == '-')) {
-    printf("❌ Invalid character '%c' in entry name. Only letters, numbers, '-' and '_' are allowed.\n", c);
-    exit(1);
-  //a bit messy verification but allows the user to use accents
-  }
-  }
-
-
   if (strchr(entry_value, '\n') == NULL) {
     int c;
     while ((c = getchar()) != '\n' && c != EOF);
@@ -212,12 +199,27 @@ for (int i = 0; entry_value[i] != '\0'; i++) {
   }
 
   entry_value[strcspn(entry_value, "\n")] = '\0';
-  snprintf(filename, sizeof(filename), "%s.vault", entry_value);
 
-  if (remove(filename) != 0){
+
+  for (int i = 0; entry_value[i] != '\0'; i++) {
+    char c = entry_value[i];
+    if (!((c >= 'a' && c <= 'z') ||
+          (c >= 'A' && c <= 'Z') ||
+          (c >= '0' && c <= '9') ||
+          c == '_' || c == '-')) {
+      printf("❌ Invalid character '%c' in entry name. Only letters, numbers, '-' and '_' are allowed.\n", c);
+      exit(1);
+      // a bit messy verification but allows the user to use accents
+    }
+  }
+
+    snprintf(filename, sizeof(filename), "%s.vault", entry_value);
+
+  if (remove(filename) != 0) {
     perror("Error while deleting the file");
     exit(1);
   }
 
   printf("Entry deletion successful: '%s'\n", filename);
 }
+
