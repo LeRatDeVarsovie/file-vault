@@ -1,23 +1,34 @@
-
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
 
-// Fonction de création
-void create_entry(void){
-  char entry_value[101];
+void create_entry(void) {
+  char entry_value[102];
   char entry_content[2056];
-  char filename[128];
+  char filename[108];
 
   printf("Please write your entry name (100 characters max): ");
   if (fgets(entry_value, sizeof(entry_value), stdin) == NULL) {
-    fprintf(stderr, "Error reading input.\n");
+    perror("Error reading input.");
     exit(1);
+  }
+
+  for (int i = 0; entry_value[i] != '\0'; i++) {
+    char c = entry_value[i];
+    if (!((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
+          (c >= '0' && c <= '9') || c == '_' || c == '-')) {
+      printf("❌ Invalid character '%c' in entry name. Only letters, numbers, "
+             "'-' and '_' are allowed.\n",
+             c);
+      exit(1);
+      // a bit messy verification but allows the user to use accents
+    }
   }
 
   if (strchr(entry_value, '\n') == NULL) {
     int c;
-    while ((c = getchar()) != '\n' && c != EOF);
+    while ((c = getchar()) != '\n' && c != EOF)
+      ;
     printf("Your entry name exceeds the max length.\n");
     exit(1);
   }
@@ -26,50 +37,61 @@ void create_entry(void){
 
   snprintf(filename, sizeof(filename), "%s.vault", entry_value);
 
-  FILE *fichier = fopen(filename, "w");
-  if (fichier == NULL){
-    perror("Error while creating the file");
-    exit(1);
-  }
-
   printf("Please write the content of %s:\n", entry_value);
   if (fgets(entry_content, sizeof(entry_content), stdin) == NULL) {
     fprintf(stderr, "Error reading content.\n");
-    fclose(fichier);
     exit(1);
   }
 
   if (strchr(entry_content, '\n') == NULL) {
     int c;
-    while ((c = getchar()) != '\n' && c != EOF);
+    while ((c = getchar()) != '\n' && c != EOF)
+      ;
     printf("Your entry content exceeds the max length.\n");
-    fclose(fichier);
     exit(1);
   }
 
-  entry_content[strcspn(entry_content, "\n")] = '\0';
-  fprintf(fichier, "%s\n", entry_content);
-  fclose(fichier);
+  FILE *file = fopen(filename, "w");
+  if (file == NULL) {
+    perror("Error while creating the file");
+    exit(1);
+  }
 
-  printf("Your entry has been registered with the following content:\n%s\n", entry_content);
+  fprintf(file, "%s\n", entry_content);
+  fclose(file);
+
+  printf("Your entry has been registered with the following content:\n%s\n",
+         entry_content);
 }
 
-// Fonction de modification du nom
 void modif_entry_value(void) {
-  char entry_value[101];
-  char new_entry_value[101];
-  char old_filename[128];
-  char new_filename[128];
+  char entry_value[102];
+  char new_entry_value[102];
+  char old_filename[108];
+  char new_filename[108];
 
   printf("Please enter the name of the entry to modify:\n");
   if (fgets(entry_value, sizeof(entry_value), stdin) == NULL) {
-    fprintf(stderr, "Error reading input.\n");
+    perror("Error reading input.");
     exit(1);
+  }
+
+  for (int i = 0; entry_value[i] != '\0'; i++) {
+    char c = entry_value[i];
+    if (!((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
+          (c >= '0' && c <= '9') || c == '_' || c == '-')) {
+      printf("❌ Invalid character '%c' in entry name. Only letters, numbers, "
+             "'-' and '_' are allowed.\n",
+             c);
+      exit(1);
+      // a bit messy verification but allows the user to use accents
+    }
   }
 
   if (strchr(entry_value, '\n') == NULL) {
     int c;
-    while ((c = getchar()) != '\n' && c != EOF);
+    while ((c = getchar()) != '\n' && c != EOF)
+      ;
     printf("Your entry name exceeds the max length.\n");
     exit(1);
   }
@@ -78,13 +100,14 @@ void modif_entry_value(void) {
 
   printf("Please enter the new entry name:\n");
   if (fgets(new_entry_value, sizeof(new_entry_value), stdin) == NULL) {
-    fprintf(stderr, "Error reading input.\n");
+    perror("Error reading input.");
     exit(1);
   }
 
   if (strchr(new_entry_value, '\n') == NULL) {
     int c;
-    while ((c = getchar()) != '\n' && c != EOF);
+    while ((c = getchar()) != '\n' && c != EOF)
+      ;
     printf("New entry name exceeds the max length.\n");
     exit(1);
   }
@@ -102,21 +125,33 @@ void modif_entry_value(void) {
   printf("Entry renamed successfully: '%s'\n", new_entry_value);
 }
 
-// Modification du contenu d'une entrée
-void modif_entry_content(void){
-  char entry_value[101];
+void modif_entry_content(void) {
+  char entry_value[102];
   char new_entry_content[2056];
-  char filename[128];
+  char filename[108];
 
   printf("Please write down the entry title to modify:\n");
   if (fgets(entry_value, sizeof(entry_value), stdin) == NULL) {
-    fprintf(stderr, "Error reading input.\n");
+    perror("Error reading input.");
     exit(1);
+  }
+
+  for (int i = 0; entry_value[i] != '\0'; i++) {
+    char c = entry_value[i];
+    if (!((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
+          (c >= '0' && c <= '9') || c == '_' || c == '-')) {
+      printf("❌ Invalid character '%c' in entry name. Only letters, numbers, "
+             "'-' and '_' are allowed.\n",
+             c);
+      exit(1);
+      // a bit messy verification but allows the user to use accents
+    }
   }
 
   if (strchr(entry_value, '\n') == NULL) {
     int c;
-    while ((c = getchar()) != '\n' && c != EOF);
+    while ((c = getchar()) != '\n' && c != EOF)
+      ;
     printf("Your entry name exceeds the max length.\n");
     exit(1);
   }
@@ -126,44 +161,56 @@ void modif_entry_content(void){
 
   printf("Please write the new content:\n");
   if (fgets(new_entry_content, sizeof(new_entry_content), stdin) == NULL) {
-    fprintf(stderr, "Error reading content.\n");
+    perror("Error reading content.");
     exit(1);
   }
 
   if (strchr(new_entry_content, '\n') == NULL) {
     int c;
-    while ((c = getchar()) != '\n' && c != EOF);
+    while ((c = getchar()) != '\n' && c != EOF)
+      ;
     printf("Content exceeds the max length.\n");
     exit(1);
   }
 
-  new_entry_content[strcspn(new_entry_content, "\n")] = '\0';
-
-  FILE *fichier = fopen(filename, "w");
-  if (fichier == NULL){
+  FILE *file = fopen(filename, "w");
+  if (file == NULL) {
     perror("Error while modifying the file");
     exit(1);
   }
 
-  fprintf(fichier, "%s\n", new_entry_content);
-  fclose(fichier);
-  printf("The entry '%s' has been successfully modified.\nNew content:\n%s\n", entry_value, new_entry_content);
+  fprintf(file, "%s\n", new_entry_content);
+  fclose(file);
+  printf("The entry '%s' has been successfully modified.\nNew content:\n%s\n",
+         entry_value, new_entry_content);
 }
 
-// Suppression d'une entrée
-void delete_entry(void){
-  char entry_value[101];
-  char filename[128];
+void delete_entry(void) {
+  char entry_value[102];
+  char filename[108];
 
   printf("Please type the entry name you wish to delete:\n");
   if (fgets(entry_value, sizeof(entry_value), stdin) == NULL) {
-    fprintf(stderr, "Error reading input.\n");
+    perror("Error reading input.");
     exit(1);
+  }
+
+  for (int i = 0; entry_value[i] != '\0'; i++) {
+    char c = entry_value[i];
+    if (!((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
+          (c >= '0' && c <= '9') || c == '_' || c == '-')) {
+      printf("❌ Invalid character '%c' in entry name. Only letters, numbers, "
+             "'-' and '_' are allowed.\n",
+             c);
+      exit(1);
+      // a bit messy verification but allows the user to use accents
+    }
   }
 
   if (strchr(entry_value, '\n') == NULL) {
     int c;
-    while ((c = getchar()) != '\n' && c != EOF);
+    while ((c = getchar()) != '\n' && c != EOF)
+      ;
     printf("Your entry name exceeds the max length.\n");
     exit(1);
   }
@@ -171,7 +218,7 @@ void delete_entry(void){
   entry_value[strcspn(entry_value, "\n")] = '\0';
   snprintf(filename, sizeof(filename), "%s.vault", entry_value);
 
-  if (remove(filename) != 0){
+  if (remove(filename) != 0) {
     perror("Error while deleting the file");
     exit(1);
   }
